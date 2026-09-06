@@ -49,6 +49,32 @@ const tiles = [
   ["鹿児島県", 1, 11],
   ["沖縄県", 0, 13],
 ];
+// トップの全国図だけを詰める。海の空白を省き、文字の大きさを保ったまま12列から10列へ減らす。
+const compactPositions = {
+  北海道: [10, 1],
+  群馬県: [9, 5],
+  栃木県: [9, 6],
+  茨城県: [10, 6],
+  千葉県: [10, 9],
+};
+const kyushuNames = new Set([
+  "福岡県",
+  "佐賀県",
+  "長崎県",
+  "熊本県",
+  "大分県",
+  "宮崎県",
+  "鹿児島県",
+  "沖縄県",
+]);
+const compactTiles = tiles.map(([name, x, y]) => {
+  const [column, row] = compactPositions[name] || [
+    x + (kyushuNames.has(name) ? 1 : 0),
+    y,
+  ];
+  // 左端と上端に残る空列・空行も除く。
+  return [name, column - 1, row - 1];
+});
 // 先頭2桁の所属は元資料から導出し、県単位の複数所属を省略しない。
 export const prefixGroups = [
   { code: "01", color: "#496ca5" },
@@ -72,7 +98,31 @@ export function prefixesFor(name) {
     ),
   ].sort();
 }
-export function mapSvg(active = []) {
+export function codesFor(name) {
+  return entries
+    .filter((entry) => entry.prefectures.includes(name))
+    .map((entry) => entry.code);
+}
+// トップの全国図は学習パターンを省略せず、最大6件を3列2段に配置する。
+function fullCodeMapSvg(active) {
+  return `<svg class="japan-map prefix-svg full-code-svg" viewBox="0 0 1210 1180" role="img" aria-label="市外局番の全学習パターンと都道府県の対応図">${compactTiles
+    .map(([name, x, y]) => {
+      const codes = codesFor(name),
+        left = x * 120 + 5,
+        top = y * 90 + 5;
+      return `<g class="prefecture-tile" data-prefecture="${name}" opacity="${!active.length || active.includes(name) ? 1 : 0.12}"><title>${name}：${codes.join("・")}</title><rect x="${left}" y="${top}" width="114" height="84" rx="6" fill="#fffefa" stroke="#c4cdbf"/><text x="${left + 57}" y="${top + 22}" text-anchor="middle" fill="#243b30" font-size="18" font-weight="600">${name}</text>${codes
+        .map((code, i) => {
+          const count = Math.min(3, codes.length - Math.floor(i / 3) * 3);
+          const badgeX = left + (114 - count * 36) / 2 + (i % 3) * 36,
+            badgeY = top + 32 + Math.floor(i / 3) * 25;
+          return `<rect x="${badgeX}" y="${badgeY}" width="34" height="22" rx="3" fill="${prefixColor(code.slice(0, 2))}"/><text data-map-code="${code}" x="${badgeX + 17}" y="${badgeY + 17}" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-weight="700" font-size="18">${code}</text>`;
+        })
+        .join("")}</g>`;
+    })
+    .join("")}</svg>`;
+}
+export function mapSvg(active = [], fullCodes = false) {
+  if (fullCodes) return fullCodeMapSvg(active);
   return `<svg class="japan-map prefix-svg" viewBox="0 0 864 950" role="img" aria-label="市外局番の先頭2桁と都道府県の対応図${active.length ? "：" + active.join("・") + "を強調" : ""}">${tiles
     .map(([name, x, y]) => {
       const prefixes = prefixesFor(name),
@@ -98,5 +148,5 @@ export function prefixMap(detailed = false, selected = "all") {
   const groups = prefixGroups.filter(
     (group) => selected === "all" || group.code === selected,
   );
-  return `<section class="map-panel prefix-map ${detailed ? "detailed-map" : ""}" data-detailed="${detailed}"><div class="map-heading"><h2>市外局番 先頭2桁マップ</h2><span>01–09</span></div><div class="prefix-layout"><div class="prefix-visual">${mapSvg(active)}</div><div class="prefix-info"><div class="prefix-legend" role="group" aria-label="先頭2桁で地図を絞り込む"><button data-prefix="all" aria-pressed="${selected === "all"}">すべて</button>${prefixGroups.map((group) => `<button data-prefix="${group.code}" aria-pressed="${selected === group.code}" style="--prefix:${group.color}"><span></span>${group.code}</button>`).join("")}</div><p class="map-instruction">番号を選択すると対応する県を強調表示します。県内の色付き番号は、その県にある番号帯です。</p><div class="prefix-correspondence" aria-live="polite">${detailed || selected !== "all" ? groups.map((group) => `<div><b style="--prefix:${group.color}">${group.code}</b><span>${[...new Set(entries.filter((entry) => entry.code.startsWith(group.code)).flatMap((entry) => entry.prefectures))].join("・")}</span></div>`).join("") : ""}</div></div></div><p class="map-source">提供資料の59パターンに基づく対応図。県境をまたぐ番号も含みます。県内の利用区域・地形・縮尺を示す図ではありません。</p></section>`;
+  return `<section class="map-panel prefix-map ${detailed ? "detailed-map" : ""}" data-detailed="${detailed}"><div class="map-heading"><h2>${detailed ? "市外局番 先頭2桁マップ" : "市外局番・都道府県マップ"}</h2><span>${detailed ? "01–09" : "全59パターン · 色は先頭2桁"}</span></div><div class="prefix-layout"><div class="prefix-visual">${mapSvg(active, !detailed)}</div><div class="prefix-info"><div class="prefix-legend" role="group" aria-label="先頭2桁で地図を絞り込む"><button data-prefix="all" aria-pressed="${selected === "all"}">すべて</button>${prefixGroups.map((group) => `<button data-prefix="${group.code}" aria-pressed="${selected === group.code}" style="--prefix:${group.color}"><span></span>${group.code}</button>`).join("")}</div><p class="map-instruction">${detailed ? "番号を選択すると対応する県を強調表示します。県内の色付き番号は、その県にある番号帯です。" : "各県に対応する学習パターンをすべて表示しています。色は先頭2桁に対応します。下の色付き番号を選択すると対応する県を強調表示します。"}</p><div class="prefix-correspondence" aria-live="polite">${detailed || selected !== "all" ? groups.map((group) => `<div><b style="--prefix:${group.color}">${group.code}</b><span>${[...new Set(entries.filter((entry) => entry.code.startsWith(group.code)).flatMap((entry) => entry.prefectures))].join("・")}</span></div>`).join("") : ""}</div></div></div><p class="map-source">提供資料の59パターンに基づく対応図。県境をまたぐ番号も含みます。県内の利用区域・地形・縮尺を示す図ではありません。</p></section>`;
 }

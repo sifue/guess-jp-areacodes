@@ -1602,3 +1602,118 @@ thead {
     min-width: 0;
   }
 }
+
+.hokkaido-panel {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #d6dfcd;
+  border-radius: 12px;
+  background: #f0f3e9;
+}
+.hokkaido-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.hokkaido-heading h2 {
+  margin: 0;
+  font-size: 22px;
+}
+.hokkaido-heading > span,
+.hokkaido-caption,
+.hokkaido-source {
+  font-size: 12px;
+  color: #56664e;
+}
+.hokkaido-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+.hokkaido-scroll {
+  min-width: 0;
+  overflow-x: auto;
+}
+.hokkaido-svg {
+  display: block;
+  width: 100%;
+  min-width: 790px;
+  max-width: 1000px;
+  margin: auto;
+}
+.hokkaido-key {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.hokkaido-key li {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  background: #fffefa;
+  padding: 15px;
+  border-radius: 7px;
+  border-top: 3px solid var(--hokkaido-color);
+}
+.hokkaido-key b {
+  color: var(--hokkaido-color);
+  font:
+    700 27px Arial,
+    sans-serif;
+}
+.hokkaido-key strong {
+  font-size: 13px;
+}
+.hokkaido-key p {
+  font-size: 12px;
+  margin: 5px 0 0;
+}
+.hokkaido-source {
+  margin: 20px 0 0;
+  border-top: 1px solid #d6dfcd;
+  padding-top: 14px;
+}
+.hokkaido-source a {
+  text-decoration: underline;
+}
+@media (max-width: 800px) {
+  .hokkaido-panel {
+    padding: 18px 12px;
+  }
+  .hokkaido-heading h2 {
+    font-size: 19px;
+  }
+  .hokkaido-key {
+    grid-template-columns: 1fr;
+  }
+  .hokkaido-scroll::before {
+    content: "図は左右にスクロールできます";
+    display: block;
+    font-size: 12px;
+    padding: 8px 0;
+    color: #56664e;
+  }
+}
+
+/* トップの全件表示は3桁の数字を読める大きさに固定し、狭い画面では図内をスクロールする。 */
+.hero > .prefix-map .full-code-svg {
+  min-width: 1000px;
+  max-width: 1210px;
+}
+.hero .prefix-visual::before {
+  content: "図は左右にスクロールできます";
+  display: block;
+  padding: 8px 0;
+  font-size: 12px;
+  color: #56664e;
+}
+@media (min-width: 1200px) {
+  .hero .prefix-visual::before {
+    display: none;
+  }
+}
