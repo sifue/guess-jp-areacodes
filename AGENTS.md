@@ -46,6 +46,8 @@ https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/shigai_list.html
 最後に引用元の情報やクレジット、使い方の表示などもお願いします。
 また制作者は Soichiro Yoshimura @sifue としてください。
 
+デプロイ方法や使い方などはREADME.mdにまとめるようにしてください。ライセンスはMITで大丈夫です。
+
 ## 技術構成
 
 - Ubuntu 22.04
