@@ -1404,3 +1404,201 @@ thead {
     font-size: clamp(28px, 8vw, 43px);
   }
 }
+
+/* 地方色ではなく先頭2桁を共通色として表示する。 */
+.prefix-map .map-heading {
+  align-items: center;
+  gap: 12px;
+}
+.prefix-map h2 {
+  margin: 0;
+  font-size: 14px;
+  color: #243b30;
+  letter-spacing: 0;
+}
+/* 地図を独立した全幅の段に置き、県名・番号を縮小しない。 */
+.hero > .prefix-map {
+  grid-column: 1 / -1;
+}
+.prefix-map {
+  min-width: 0;
+}
+.hero > .prefix-map .prefix-svg {
+  width: 100%;
+  min-width: 864px;
+  max-width: 1000px;
+  max-height: none;
+  margin: 0 auto;
+}
+.hero .prefix-visual {
+  min-width: 0;
+  overflow-x: auto;
+}
+.hero .prefix-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+.hero .prefix-info {
+  min-width: 0;
+}
+.hero .prefix-correspondence {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 20px;
+}
+.prefix-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.prefix-legend button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 48px;
+  min-height: 44px;
+  border: 1px solid #cbd4c3;
+  border-radius: 5px;
+  background: #fffefa;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 7px;
+}
+.prefix-legend button[aria-pressed="true"] {
+  outline: 2px solid #243b30;
+  outline-offset: 1px;
+}
+.prefix-legend button span {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--prefix);
+}
+.map-instruction,
+.map-source {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #56664e;
+}
+.map-source {
+  border-top: 1px solid #cfd8c7;
+  padding-top: 12px;
+  margin-bottom: 0;
+}
+.prefix-correspondence > div {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  margin: 12px 0;
+  align-items: start;
+}
+.prefix-correspondence b {
+  background: var(--prefix);
+  color: white;
+  padding: 0 7px;
+  border-radius: 3px;
+}
+.detailed-map {
+  margin-bottom: 32px;
+}
+.countdown {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 24px;
+  color: #245b43;
+  font-size: 14px;
+}
+.countdown b {
+  font:
+    700 36px Arial,
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+  min-width: 82px;
+}
+.countdown.urgent {
+  color: #b0352d;
+}
+@media (max-width: 600px) {
+  .header {
+    height: auto;
+    min-height: 88px;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    padding-bottom: 7px;
+    gap: 4px 18px;
+  }
+  .brand {
+    font-size: 20px;
+  }
+  nav {
+    margin-left: auto;
+  }
+  .detailed-map .prefix-layout {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .prefix-map {
+    padding: 16px 10px;
+  }
+  .prefix-svg {
+    max-height: none;
+  }
+  .prefix-legend {
+    gap: 7px;
+  }
+  .prefix-legend button {
+    flex: 1 0 15%;
+  }
+}
+@media (max-width: 1000px) {
+  .hero .prefix-visual::before {
+    content: "図は左右にスクロールできます";
+    display: block;
+    padding: 8px 0;
+    font-size: 12px;
+    color: #56664e;
+  }
+  .hero .prefix-correspondence {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 全暗記モードの地図は従来の配置とサイズを維持する。 */
+.detailed-map .prefix-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.detailed-map .prefix-svg {
+  max-height: none;
+}
+@media (max-width: 600px) {
+  .detailed-map .prefix-layout {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    min-width: 0;
+  }
+  .detailed-map .prefix-visual {
+    overflow-x: auto;
+    border: 1px solid #cfd8c7;
+    border-radius: 5px;
+  }
+  .detailed-map .prefix-visual::before {
+    content: "図は左右にスクロールできます";
+    display: block;
+    padding: 8px;
+    font-size: 11px;
+    color: #56664e;
+  }
+  .detailed-map .prefix-svg {
+    min-width: 620px;
+  }
+  .detailed-map .prefix-layout > * {
+    min-width: 0;
+  }
+}

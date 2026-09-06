@@ -120,3 +120,59 @@ test("ストレージ保存失敗でも結果を表示する", async ({ page }) 
     page.getByText("記録を端末に保存できませんでした。", { exact: false }),
   ).toBeVisible();
 });
+
+test("10秒のカウントダウン・時間切れ・次問へのリセット", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/");
+  await page.locator('[data-start="ten"]').first().click();
+  await expect(page.locator("[data-countdown]")).toHaveText("10.0");
+  await page.clock.runFor(7100);
+  await expect(page.locator(".countdown")).toHaveClass(/urgent/);
+  await page.clock.runFor(3000);
+  await expect(page.locator(".feedback")).toContainText("時間切れ");
+  await expect(page.locator("[data-countdown]")).toHaveText("0.0");
+  await expect(page.locator(".choice").first()).toBeDisabled();
+  await page.clock.runFor(20000);
+  await expect(page.locator(".quiz-progress")).toContainText("問題 1");
+  await page.locator("[data-next]").click();
+  await expect(page.locator("[data-countdown]")).toHaveText("10.0");
+  await page.locator(".choice").first().click();
+  const stopped = await page.locator("[data-countdown]").innerText();
+  await page.clock.runFor(20000);
+  await expect(page.locator("[data-countdown]")).toHaveText(stopped);
+  await page.getByRole("link", { name: "← モード選択へ", exact: true }).click();
+  await page.clock.runFor(20000);
+  await expect(page.locator(".feedback")).toHaveCount(0);
+});
+
+test("先頭2桁マップの凡例・複数所属・全暗記詳細図・名称", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveTitle(/市外局番ノート/);
+  await expect(
+    page.getByRole("link", { name: "GitHub", exact: true }),
+  ).toHaveAttribute("href", "https://github.com/sifue/guess-jp-areacodes");
+  await expect(page.locator(".learning-strip")).toHaveCount(0);
+  await expect(page.locator('[data-prefecture="東京都"]')).toContainText("03");
+  await expect(page.locator('[data-prefecture="東京都"]')).toContainText("04");
+  await page.locator('[data-prefix="02"]').click();
+  await expect(page.locator('[data-prefecture="宮城県"]')).toHaveAttribute(
+    "opacity",
+    "1",
+  );
+  await expect(page.locator('[data-prefecture="青森県"]')).toHaveAttribute(
+    "opacity",
+    "0.12",
+  );
+  await page.getByRole("link", { name: "暗記ノート", exact: true }).click();
+  await expect(page.locator(".detailed-map")).toBeVisible();
+  await expect(page.locator(".prefix-correspondence>div")).toHaveCount(9);
+  await page.screenshot({
+    path: `test-results/study-map-${test.info().project.name}.png`,
+    fullPage: false,
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});
