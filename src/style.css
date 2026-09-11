@@ -1951,15 +1951,15 @@ thead {
   }
 }
 
-/* 全国図を一定の高さに収め、凡例と地図切替へ戻りやすくする。 */
+/* 全国図は自然な高さで全体を表示し、狭い画面だけ横スクロールさせる。 */
 .home-maps .prefix-visual {
-  max-height: min(70vh, 720px);
-  overflow: auto;
+  max-height: none;
+  overflow-x: auto;
   border: 1px solid #d6dfcd;
   border-radius: 6px;
 }
 .home-maps .prefix-visual::before {
-  content: "図は上下・左右にスクロールできます";
+  content: "図は左右にスクロールできます";
   display: block;
   position: sticky;
   top: 0;
