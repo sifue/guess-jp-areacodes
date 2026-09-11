@@ -1417,32 +1417,32 @@ thead {
   letter-spacing: 0;
 }
 /* 地図を独立した全幅の段に置き、県名・番号を縮小しない。 */
-.hero > .prefix-map {
+.home-maps .prefix-map {
   grid-column: 1 / -1;
 }
 .prefix-map {
   min-width: 0;
 }
-.hero > .prefix-map .prefix-svg {
+.home-maps .prefix-map .prefix-svg {
   width: 100%;
   min-width: 864px;
   max-width: 1000px;
   max-height: none;
   margin: 0 auto;
 }
-.hero .prefix-visual {
+.home-maps .prefix-visual {
   min-width: 0;
   overflow-x: auto;
 }
-.hero .prefix-layout {
+.home-maps .prefix-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 }
-.hero .prefix-info {
+.home-maps .prefix-info {
   min-width: 0;
 }
-.hero .prefix-correspondence {
+.home-maps .prefix-correspondence {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0 20px;
@@ -1555,14 +1555,14 @@ thead {
   }
 }
 @media (max-width: 1000px) {
-  .hero .prefix-visual::before {
+  .home-maps .prefix-visual::before {
     content: "図は左右にスクロールできます";
     display: block;
     padding: 8px 0;
     font-size: 12px;
     color: #56664e;
   }
-  .hero .prefix-correspondence {
+  .home-maps .prefix-correspondence {
     grid-template-columns: 1fr;
   }
 }
@@ -1701,11 +1701,11 @@ thead {
 }
 
 /* トップの全件表示は3桁の数字を読める大きさに固定し、狭い画面では図内をスクロールする。 */
-.hero > .prefix-map .full-code-svg {
+.home-maps .prefix-map .full-code-svg {
   min-width: 1000px;
   max-width: 1210px;
 }
-.hero .prefix-visual::before {
+.home-maps .prefix-visual::before {
   content: "図は左右にスクロールできます";
   display: block;
   padding: 8px 0;
@@ -1713,7 +1713,7 @@ thead {
   color: #56664e;
 }
 @media (min-width: 1200px) {
-  .hero .prefix-visual::before {
+  .home-maps .prefix-visual::before {
     display: none;
   }
 }
@@ -1793,4 +1793,179 @@ thead {
   .regional-notes {
     grid-template-columns: 1fr;
   }
+}
+
+/* モード選択を冒頭に置き、地域図は1枚ずつ表示する。 */
+.home-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 36px 0 30px;
+}
+.home-intro h1 {
+  margin: 10px 0;
+  font-size: 32px;
+  line-height: 1.5;
+}
+.home-intro p {
+  margin: 8px 0;
+  font-size: 13px;
+  color: #58674f;
+}
+.home-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.home-meta span {
+  background: #edf1e5;
+  border-radius: 4px;
+  padding: 3px 9px;
+  font-size: 11px;
+  color: #53644b;
+}
+.home-intro > .primary {
+  flex-shrink: 0;
+}
+.home-maps {
+  margin-top: 42px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+.map-study-link {
+  font-size: 12px;
+  color: var(--green);
+  text-decoration: underline;
+}
+.map-picker {
+  padding: 0 0 20px;
+}
+.map-picker-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.map-picker button {
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  min-height: 62px;
+  padding: 12px 16px;
+  border: 1px solid #c9d4c1;
+  border-radius: 8px;
+  background: #fffefa;
+}
+.map-picker strong {
+  font-size: 14px;
+}
+.map-picker button span {
+  font-size: 11px;
+}
+.map-picker button[aria-pressed="true"] {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+.map-picker-help {
+  display: block;
+  margin-top: 8px;
+  color: #63745a;
+  font-size: 11px;
+}
+.home-map-content[hidden] {
+  display: none;
+}
+.home-map-content {
+  min-width: 0;
+}
+@media (max-width: 600px) {
+  .home-intro {
+    display: block;
+    padding: 23px 0;
+  }
+  .home-intro h1 {
+    font-size: 24px;
+    letter-spacing: -0.03em;
+  }
+  .home-intro > .primary {
+    display: none;
+  }
+  .mode-section .section-heading {
+    margin-bottom: 24px;
+  }
+  .mode-section .mode-grid {
+    gap: 16px;
+  }
+  .mode-section .mode-card {
+    padding: 16px;
+  }
+  .mode-section .mode-card h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+  }
+  .mode-section .card-top {
+    float: right;
+    margin-left: 10px;
+  }
+  .mode-section .card-index {
+    display: none;
+  }
+  .mode-section .mode-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 19px;
+  }
+  .mode-section .mode-card p {
+    font-size: 11px;
+    margin-bottom: 9px;
+  }
+  .mode-section .card-bottom {
+    padding-top: 8px;
+    font-size: 10px;
+  }
+  .mode-section .card-bottom b {
+    width: 22px;
+    height: 22px;
+  }
+  .mode-section .recommend {
+    top: -11px;
+    font-size: 8px;
+  }
+  .home-maps {
+    margin-top: 28px;
+    padding-top: 24px;
+  }
+  .map-picker-buttons {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .map-picker button {
+    min-height: 58px;
+    padding: 10px 12px;
+  }
+}
+
+/* 全国図を一定の高さに収め、凡例と地図切替へ戻りやすくする。 */
+.home-maps .prefix-visual {
+  max-height: min(70vh, 720px);
+  overflow: auto;
+  border: 1px solid #d6dfcd;
+  border-radius: 6px;
+}
+.home-maps .prefix-visual::before {
+  content: "図は上下・左右にスクロールできます";
+  display: block;
+  position: sticky;
+  top: 0;
+  left: 0;
+  padding: 8px;
+  background: #eef2e8;
+  font-size: 11px;
+  z-index: 1;
 }

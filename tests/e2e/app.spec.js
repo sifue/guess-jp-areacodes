@@ -80,7 +80,7 @@ async function play(page, total, missFirst = false) {
 }
 test("10問完走・誤答復習・履歴の永続化とモード分離", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "まずは10問、挑戦する" }).click();
+  await page.locator('[data-start="ten"]').first().click();
   await play(page, 10, true);
   await expect(page.locator(".grade b")).toHaveText("A");
   await expect(page.locator(".review-row")).toHaveCount(10);
@@ -180,6 +180,7 @@ test("先頭2桁マップの凡例・複数所属・全暗記詳細図・名称"
 test("04系・07系の補足図の全パターン・重なり・対応県表", async ({ page }) => {
   await page.goto("/");
   for (const prefix of ["04", "07"]) {
+    await page.locator(`[data-home-map="${prefix}"]`).click();
     const panel = page.locator(`[data-regional-map="${prefix}"]`);
     await expect(panel).toBeVisible();
     for (const entry of data.filter((entry) => entry.code.startsWith(prefix))) {
@@ -217,4 +218,34 @@ test("04系・07系の補足図の全パターン・重なり・対応県表", a
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+});
+
+test("モード選択が地図より上にあり、地域図は1枚ずつ切り替わる", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const modes = await page.locator(".mode-section").boundingBox();
+  const maps = await page.locator(".home-maps").boundingBox();
+  expect(modes.y + modes.height).toBeLessThan(maps.y);
+  expect(modes.y).toBeLessThan(350);
+  await expect(page.locator(".home-map-content:visible")).toHaveCount(1);
+  await expect(page.locator("#home-map-national")).toBeVisible();
+  await page.locator('[data-home-map="hokkaido"]').click();
+  await expect(page.locator(".hokkaido-svg")).toBeVisible();
+  await expect(page.locator("#home-map-national")).toBeHidden();
+  for (const map of ["04", "07", "national"]) {
+    await page.locator(`[data-home-map="${map}"]`).click();
+    await expect(page.locator(".home-map-content:visible")).toHaveCount(1);
+    await expect(page.locator(`[data-home-map="${map}"]`)).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  }
+  await page.locator('[data-prefix="04"]').click();
+  await expect(page.locator("#home-map-national")).toBeVisible();
+  await page.locator('[data-home-map="07"]').click();
+  await expect(page.locator("#home-map-07")).toBeVisible();
+  await page.locator(".home-maps").screenshot({
+    path: `test-results/map-switcher-${test.info().project.name}.png`,
+  });
 });

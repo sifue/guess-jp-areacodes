@@ -121,8 +121,9 @@ function codeColor(code, prefix) {
     .findIndex((entry) => entry.code === code);
   return index < 0 ? "#596558" : colors[index % colors.length];
 }
-export function regionalMaps() {
+export function regionalMaps(prefix) {
   return definitions
+    .filter((region) => !prefix || region.prefix === prefix)
     .map((region) => {
       const patterns = entries.filter((entry) =>
         entry.code.startsWith(region.prefix),

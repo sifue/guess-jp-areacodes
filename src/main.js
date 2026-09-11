@@ -18,6 +18,7 @@ let countdownId;
 const app = document.querySelector("#app");
 const state = {
   page: "home",
+  homeMap: "national",
   mode: "ten",
   questions: [],
   answers: [],
@@ -53,10 +54,28 @@ const modeName = (mode) =>
 function shell(content) {
   app.innerHTML = `<header class="header"><a class="brand" href="#home"><span class="brand-icon">局</span>市外局番ノート<span class="brand-sub">日本の市外局番をおぼえる</span></a><nav aria-label="メインナビゲーション"><a href="#home" ${state.page === "home" ? 'aria-current="page"' : ""}>ホーム</a><a href="#study" ${state.page === "study" ? 'aria-current="page"' : ""}>暗記ノート</a><a href="#history" ${state.page === "history" ? 'aria-current="page"' : ""}>学習記録</a></nav></header><main id="main" tabindex="-1">${content}</main><footer><a class="footer-brand" href="#home">市外局番ノート </a><div><a href="#about">使い方・出典</a><a href="https://github.com/sifue/guess-jp-areacodes">GitHub</a><span>© ${new Date().getFullYear()} Soichiro Yoshimura <a href="https://github.com/sifue">@sifue</a></span><span>v${version}</span></div></footer>`;
 }
+const homeMaps = [
+  { id: "national", title: "全国", subtitle: "全59パターン" },
+  { id: "hokkaido", title: "北海道", subtitle: "011〜016" },
+  { id: "04", title: "首都圏", subtitle: "04系" },
+  { id: "07", title: "近畿・北陸", subtitle: "07系" },
+];
 function home() {
-  shell(
-    `<section class="hero"><div class="hero-copy"><div class="eyebrow"><span></span> GEOGUESSR 日本マップ向け</div><h1>数字から、<br>日本を<span class="underline">思い出す。</span></h1><p class="intro">市外局番の先頭2〜3桁から都道府県を答える4択クイズ。<br class="desktop">1問10秒。全59パターンを収録。</p><button class="primary" data-start="ten">まずは10問、挑戦する <span>↗</span></button><div class="hero-caption">登録不要 <i>·</i> 1回 約2分 <i>·</i> スマートフォン対応</div><div class="hero-facts"><div><strong>47<span>都道府県</span></strong><small>全国対応</small></div><div><strong>${entries.length}<span>パターン</span></strong><small>先頭2〜3桁で学ぶ</small></div><div><strong>3<span>つのモード</span></strong><small>1問10秒</small></div></div></div>${prefixMap()}${hokkaidoMap()}${regionalMaps()}</section><section class="mode-section"><div class="section-heading"><div><span class="eyebrow">LET’S PRACTICE</span><h2>モード選択</h2></div></div><div class="mode-grid"><button class="mode-card recommended" data-start="ten"><span class="recommend">はじめての方におすすめ</span><span class="card-top"><span class="mode-icon">10</span><span class="card-index">01 / QUICK QUIZ</span></span><h3>市外局番10問モード</h3><p>59パターンからランダムに10問出題。<br>回答後に正解と覚え方を表示。</p><span class="card-bottom"><span>10問 <i>·</i> 4択 <i>·</i> 約2分</span><b>→</b></span></button><button class="mode-card" data-start="all"><span class="card-top"><span class="mode-icon ochre">全</span><span class="card-index">02 / FULL CHALLENGE</span></span><h3>全市外局番モード</h3><p>全${entries.length}パターンを重複なしで出題。<br>終了後に全問の回答結果を表示。</p><span class="card-bottom"><span>${entries.length}問 <i>·</i> 4択 <i>·</i> 1問10秒</span><b>→</b></span></button><a class="mode-card" href="#study"><span class="card-top"><span class="mode-icon blue">▤</span><span class="card-index">03 / MEMORY NOTE</span></span><h3>全暗記モード</h3><p>番号と都道府県の対応図・一覧。<br>県名と覚え方を個別・一括で非表示。</p><span class="card-bottom"><span>一覧 <i>·</i> 覚え方 <i>·</i> 表示／非表示</span><b>→</b></span></a></div></section><p class="scope-note">学習対象は資料の先頭2〜3桁です。複数の都道府県にまたがる番号は、県の組み合わせで出題します。正式な全市外局番の網羅一覧ではありません。</p>`,
-  );
+  const mapContents = {
+    national: prefixMap(),
+    hokkaido: hokkaidoMap(),
+    "04": regionalMaps("04"),
+    "07": regionalMaps("07"),
+  };
+  shell(`<section class="home-intro"><div><span class="eyebrow">GEOGUESSR 日本マップ向け</span><h1>数字から、日本を思い出す。</h1><p>市外局番の先頭2〜3桁から都道府県を答える4択クイズ。</p><div class="home-meta"><span>47都道府県</span><span>59パターン</span><span>1問10秒</span><span>登録不要</span></div></div></section><section class="mode-section"><div class="section-heading"><div><span class="eyebrow">LET’S PRACTICE</span><h2>モード選択</h2></div></div><div class="mode-grid"><button class="mode-card recommended" data-start="ten"><span class="recommend">はじめての方におすすめ</span><span class="card-top"><span class="mode-icon">10</span><span class="card-index">01 / QUICK QUIZ</span></span><h3>市外局番10問モード</h3><p>59パターンからランダムに10問出題。<br>回答後に正解と覚え方を表示。</p><span class="card-bottom"><span>10問 <i>·</i> 4択 <i>·</i> 約2分</span><b>→</b></span></button><button class="mode-card" data-start="all"><span class="card-top"><span class="mode-icon ochre">全</span><span class="card-index">02 / FULL CHALLENGE</span></span><h3>全市外局番モード</h3><p>全${entries.length}パターンを重複なしで出題。<br>終了後に全問の回答結果を表示。</p><span class="card-bottom"><span>${entries.length}問 <i>·</i> 4択 <i>·</i> 1問10秒</span><b>→</b></span></button><a class="mode-card" href="#study"><span class="card-top"><span class="mode-icon blue">▤</span><span class="card-index">03 / MEMORY NOTE</span></span><h3>全暗記モード</h3><p>番号と都道府県の対応図・一覧。<br>県名と覚え方を個別・一括で非表示。</p><span class="card-bottom"><span>一覧 <i>·</i> 覚え方 <i>·</i> 表示／非表示</span><b>→</b></span></a></div></section>
+<section class="home-maps" aria-labelledby="home-maps-title"><div class="section-heading"><div><span class="eyebrow">AREA CODE MAPS</span><h2 id="home-maps-title">市外局番マップ</h2></div><a href="#study" class="map-study-link">暗記ノートで一覧を見る →</a></div><div class="map-picker" role="group" aria-label="表示する地図"><div class="map-picker-buttons">${homeMaps.map((map) => `<button data-home-map="${map.id}" aria-pressed="${state.homeMap === map.id}" aria-controls="home-map-${map.id}"><strong>${map.title}</strong><span>${map.subtitle}</span></button>`).join("")}</div><span class="map-picker-help">地図を選んで切り替え</span></div>${homeMaps.map((map) => `<div id="home-map-${map.id}" class="home-map-content" ${state.homeMap === map.id ? "" : "hidden"}>${mapContents[map.id]}</div>`).join("")}</section><p class="scope-note">学習対象は資料の先頭2〜3桁です。複数の都道府県にまたがる番号は、県の組み合わせで出題します。正式な全市外局番の網羅一覧ではありません。</p>`);
+  if (state.homeMap === "national") positionNationalMap();
+}
+function positionNationalMap() {
+  const viewport = document.querySelector("#home-map-national .prefix-visual");
+  // 小画面で北東の北海道が画面外になり、空白だけが見えることを防ぐ。
+  if (viewport)
+    viewport.scrollLeft = viewport.scrollWidth - viewport.clientWidth;
 }
 function start(mode, questions) {
   state.mode = mode;
@@ -259,12 +278,32 @@ app.addEventListener("input", (event) => {
 app.addEventListener("click", (event) => {
   const el = event.target.closest("button");
   if (!el) return;
+  if (el.hasAttribute("data-home-map")) {
+    state.homeMap = el.dataset.homeMap;
+    for (const button of document.querySelectorAll("[data-home-map]")) {
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.homeMap === state.homeMap),
+      );
+    }
+    for (const map of homeMaps) {
+      document.getElementById(`home-map-${map.id}`).hidden =
+        map.id !== state.homeMap;
+    }
+    if (state.homeMap === "national") positionNationalMap();
+  }
   if (el.hasAttribute("data-prefix")) {
     const panel = el.closest(".prefix-map");
+    const viewport = panel.querySelector(".prefix-visual");
+    const scrollPosition = [viewport.scrollLeft, viewport.scrollTop];
+    const parent = panel.parentElement;
     panel.outerHTML = prefixMap(
       panel.dataset.detailed === "true",
       el.dataset.prefix,
     );
+    const replacement = parent.querySelector(".prefix-visual");
+    replacement.scrollLeft = scrollPosition[0];
+    replacement.scrollTop = scrollPosition[1];
     document
       .querySelector(`[data-prefix="${el.dataset.prefix}"]`)
       ?.focus({ preventScroll: true });
