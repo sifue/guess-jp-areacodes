@@ -176,3 +176,45 @@ test("先頭2桁マップの凡例・複数所属・全暗記詳細図・名称"
     ),
   ).toBe(true);
 });
+
+test("04系・07系の補足図の全パターン・重なり・対応県表", async ({ page }) => {
+  await page.goto("/");
+  for (const prefix of ["04", "07"]) {
+    const panel = page.locator(`[data-regional-map="${prefix}"]`);
+    await expect(panel).toBeVisible();
+    for (const entry of data.filter((entry) => entry.code.startsWith(prefix))) {
+      await expect(
+        panel.locator(`[data-region-code="${entry.code}"]`).first(),
+      ).toBeVisible();
+    }
+    const overlaps = await panel
+      .locator("[data-region-code]")
+      .evaluateAll((nodes) => {
+        const boxes = nodes.map((node) => node.querySelector("rect").getBBox());
+        return boxes.some((box, i) =>
+          boxes
+            .slice(i + 1)
+            .some(
+              (other) =>
+                box.x < other.x + other.width &&
+                box.x + box.width > other.x &&
+                box.y < other.y + other.height &&
+                box.y + box.height > other.y,
+            ),
+        );
+      });
+    expect(overlaps).toBe(false);
+    await panel
+      .getByText("番号ごとの対応都道府県を表示", { exact: true })
+      .click();
+    await expect(panel.locator("tbody tr")).toHaveCount(8);
+    await panel.screenshot({
+      path: `test-results/regional-${prefix}-${test.info().project.name}.png`,
+    });
+  }
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});

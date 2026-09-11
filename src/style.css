@@ -1717,3 +1717,80 @@ thead {
     display: none;
   }
 }
+
+.regional-description {
+  font-size: 14px;
+  line-height: 1.9;
+}
+.regional-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.regional-legend > span {
+  font-size: 13px;
+  color: var(--code-color, #58674f);
+  background: #fffefa;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+.regional-legend b {
+  font:
+    700 20px Arial,
+    sans-serif;
+}
+.regional-legend .context-legend {
+  border: 1px dashed #596558;
+}
+.regional-scroll {
+  min-width: 0;
+  overflow-x: auto;
+}
+.regional-svg {
+  display: block;
+  width: 100%;
+  min-width: 1000px;
+  max-width: 1100px;
+  margin: auto;
+}
+.regional-notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+.regional-notes p {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  margin: 0;
+  background: #fffefa;
+  border-radius: 7px;
+  font-size: 13px;
+}
+.regional-notes b {
+  font:
+    700 24px Arial,
+    sans-serif;
+}
+.regional-table summary {
+  padding: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+@media (max-width: 1100px) {
+  .regional-scroll::before {
+    content: "図は左右にスクロールできます";
+    display: block;
+    padding: 8px 0;
+    color: #56664e;
+    font-size: 12px;
+  }
+}
+@media (max-width: 600px) {
+  .regional-notes {
+    grid-template-columns: 1fr;
+  }
+}
