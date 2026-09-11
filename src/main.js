@@ -72,7 +72,7 @@ function home() {
   if (state.homeMap === "national") positionNationalMap();
 }
 function positionNationalMap() {
-  const viewport = document.querySelector("#home-map-national .prefix-visual");
+  const viewport = document.querySelector(".prefix-map .prefix-visual");
   // 小画面で北東の北海道が画面外になり、空白だけが見えることを防ぐ。
   if (viewport)
     viewport.scrollLeft = viewport.scrollWidth - viewport.clientWidth;
@@ -214,6 +214,7 @@ function study() {
       )
       .join("")}</tbody></table></div></details></section>`,
   );
+  positionNationalMap();
   studyList();
 }
 function studyList() {

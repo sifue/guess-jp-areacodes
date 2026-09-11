@@ -1417,32 +1417,32 @@ thead {
   letter-spacing: 0;
 }
 /* 地図を独立した全幅の段に置き、県名・番号を縮小しない。 */
-.home-maps .prefix-map {
+.prefix-map {
   grid-column: 1 / -1;
 }
 .prefix-map {
   min-width: 0;
 }
-.home-maps .prefix-map .prefix-svg {
+.prefix-map .prefix-svg {
   width: 100%;
   min-width: 864px;
   max-width: 1000px;
   max-height: none;
   margin: 0 auto;
 }
-.home-maps .prefix-visual {
+.prefix-map .prefix-visual {
   min-width: 0;
   overflow-x: auto;
 }
-.home-maps .prefix-layout {
+.prefix-map .prefix-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 }
-.home-maps .prefix-info {
+.prefix-map .prefix-info {
   min-width: 0;
 }
-.home-maps .prefix-correspondence {
+.prefix-map .prefix-correspondence {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0 20px;
@@ -1537,10 +1537,6 @@ thead {
   nav {
     margin-left: auto;
   }
-  .detailed-map .prefix-layout {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
   .prefix-map {
     padding: 16px 10px;
   }
@@ -1555,51 +1551,15 @@ thead {
   }
 }
 @media (max-width: 1000px) {
-  .home-maps .prefix-visual::before {
+  .prefix-map .prefix-visual::before {
     content: "図は左右にスクロールできます";
     display: block;
     padding: 8px 0;
     font-size: 12px;
     color: #56664e;
   }
-  .home-maps .prefix-correspondence {
+  .prefix-map .prefix-correspondence {
     grid-template-columns: 1fr;
-  }
-}
-
-/* 全暗記モードの地図は従来の配置とサイズを維持する。 */
-.detailed-map .prefix-layout {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 24px;
-  align-items: center;
-}
-.detailed-map .prefix-svg {
-  max-height: none;
-}
-@media (max-width: 600px) {
-  .detailed-map .prefix-layout {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    min-width: 0;
-  }
-  .detailed-map .prefix-visual {
-    overflow-x: auto;
-    border: 1px solid #cfd8c7;
-    border-radius: 5px;
-  }
-  .detailed-map .prefix-visual::before {
-    content: "図は左右にスクロールできます";
-    display: block;
-    padding: 8px;
-    font-size: 11px;
-    color: #56664e;
-  }
-  .detailed-map .prefix-svg {
-    min-width: 620px;
-  }
-  .detailed-map .prefix-layout > * {
-    min-width: 0;
   }
 }
 
@@ -1701,11 +1661,11 @@ thead {
 }
 
 /* トップの全件表示は3桁の数字を読める大きさに固定し、狭い画面では図内をスクロールする。 */
-.home-maps .prefix-map .full-code-svg {
+.prefix-map .full-code-svg {
   min-width: 1000px;
   max-width: 1210px;
 }
-.home-maps .prefix-visual::before {
+.prefix-map .prefix-visual::before {
   content: "図は左右にスクロールできます";
   display: block;
   padding: 8px 0;
@@ -1713,7 +1673,7 @@ thead {
   color: #56664e;
 }
 @media (min-width: 1200px) {
-  .home-maps .prefix-visual::before {
+  .prefix-map .prefix-visual::before {
     display: none;
   }
 }
@@ -1952,13 +1912,13 @@ thead {
 }
 
 /* 全国図は自然な高さで全体を表示し、狭い画面だけ横スクロールさせる。 */
-.home-maps .prefix-visual {
+.prefix-map .prefix-visual {
   max-height: none;
   overflow-x: auto;
   border: 1px solid #d6dfcd;
   border-radius: 6px;
 }
-.home-maps .prefix-visual::before {
+.prefix-map .prefix-visual::before {
   content: "図は左右にスクロールできます";
   display: block;
   position: sticky;
